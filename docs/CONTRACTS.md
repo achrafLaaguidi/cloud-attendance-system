@@ -1,6 +1,6 @@
 # CONTRACTS.md — Cloud Attendance System
 
-**Status:** DRAFT — NOT APPROVED  
+**Status:** Approved 
 **Version:** 0.1.0  
 **Owners:** All five project contributors  
 **Rule:** No implementation, migrations, event producers/consumers, or Terraform resource creation until this document is approved by all contributors.

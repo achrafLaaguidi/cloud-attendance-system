@@ -1,0 +1,45 @@
+
+name: Docker Build CI
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.service }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - auth-service
+          - student-service
+          - facial-recognition-service
+          - attendance-service
+          - notification-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Verify Dockerfile exists
+        run: |
+          test -f "services/${{ matrix.service }}/Dockerfile" || exit 1
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./services/${{ matrix.service }}
+          file: ./services/${{ matrix.service }}/Dockerfile
+          push: false
+          tags: cloud-attendance/${{ matrix.service }}:ci
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
